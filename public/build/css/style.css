@@ -1,0 +1,17 @@
+.table-condensed > thead > tr > th,
+.table-condensed > tbody > tr > th,
+.table-condensed > tfoot > tr > th,
+.table-condensed > thead > tr > td,
+.table-condensed > tbody > tr > td,
+.table-condensed > tfoot > tr > td {
+    padding: 2px;
+}
+
+.table-search > thead > tr > th,
+.table-search > tbody > tr > th,
+.table-search > tfoot > tr > th,
+.table-search > thead > tr > td,
+.table-search > tbody > tr > td,
+.table-search > tfoot > tr > td {
+    padding: 2px;
+}
