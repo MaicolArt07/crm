@@ -17,6 +17,19 @@ if (isset($_REQUEST['funcion'])) {
             $id_transporte = $_REQUEST['id_transporte'];
             $detalle_transporte->getDetalleTransporte_Modificar($id_transporte);
             break;
+
+        case "actualizar_detalle_transporte":
+            $id_detalle = $_REQUEST['id_detalle'];
+            $cantidad = $_REQUEST['cantidad'];
+            $cantidad_disponible = $_REQUEST['disponible'];
+            $response_detalle_transporte = $detalle_transporte->modificarDetalleTransporte($id_detalle, $cantidad, $cantidad_disponible);
+            echo json_encode($response_detalle_transporte);
+        break;
+        case "eliminar_detalle_transporte":
+            $id_detalle = $_REQUEST['id_detalle'];
+            $response_detalle_transporte = $detalle_transporte->eliminarDetalleTransporte($id_detalle);
+            echo json_encode($response_detalle_transporte);
+        break;
     }
 }
 
@@ -49,5 +62,22 @@ class NDetalleTransporte
         echo $lista_detalle;
     }
 
+    public function modificarDetalleTransporte($id_detalle, $cantidad, $cantidad_disponible)
+    {
+        $detalle_transporte = new DDetalleTransporte();
+        $detalle_transporte->setId($id_detalle);
+        $detalle_transporte->setCantidad($cantidad);
+        $detalle_transporte->setDisponible($cantidad_disponible);
+		$response = $detalle_transporte->modificarDetalleTransporte();
+        return $response;
+    }
+
+    public function eliminarDetalleTransporte($id_detalle)
+    {
+        $detalle_transporte = new DDetalleTransporte();
+        $detalle_transporte->setId($id_detalle);
+		$response = $detalle_transporte->eliminarDetalleTransporte();
+        return $response;
+    }
 }
  ?>

@@ -87,11 +87,11 @@ $estado = $_GET['E'];
     <div class="page-container">
         <div class="page-header clearfix">
             <div class="pull-left">
-                <h4 class="mt-0 mb-5">Transportes</h4>
+                <h4 class="mt-0 mb-5">Traspaso</h4>
                 <ol class="breadcrumb mb-0">
-                    <li><a href="#">Transporte</a></li>
-                    <li><a href="index_transportes.php">Listado de transportes</a></li>
-                    <li class="active">Modificar transporte</li>
+                    <li><a href="#">Traspaso</a></li>
+                    <li><a href="index_transportes.php">Listado de traspasos</a></li>
+                    <li class="active">Modificar traspaso</li>
                 </ol>
             </div>
         </div>
@@ -133,6 +133,7 @@ $estado = $_GET['E'];
                                         <th>Producto</th>
 										<th>Cantidad Disponible</th>
                                         <th>Cantidad</th>
+                                        <th class="text-center">Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -268,6 +269,36 @@ $estado = $_GET['E'];
 
 
 </div>
+
+<!-- Modal para la tabla de detalles antiguos (dt_detalle_ant) -->
+<div id="modal_edit_cantidad" tabindex="-1" role="dialog" class="modal fade bs-modal-edit text-left">
+    <div role="document" class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Modificar Cantidad</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form_edit_cantidad">
+                    <div class="form-group">
+                        <label for="edit_cantidad_disponible">Cantidad Disponible</label>
+                        <input id="edit_cantidad_disponible" type="number" class="form-control" disabled>
+
+                        <label for="edit_cantidad">Cantidad</label>
+                        <input id="edit_cantidad" type="number" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">Cancelar</button>
+                <button type="button" id="btn_update_cantidad" class="btn btn-raised btn-success">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- jQuery-->
 <script type="text/javascript" src="../../../public/plugins/jquery/dist/jquery.min.js"></script>

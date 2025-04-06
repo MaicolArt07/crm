@@ -224,5 +224,39 @@ class DDetalleTransporte
             echo $exc->getTraceAsString();
         }
     }
+
+    function modificarDetalleTransporte()
+    {
+        try {
+
+            $sql = "UPDATE detalle_transporte SET Cantidad='$this->Cantidad', Disponible='$this->Disponible' WHERE Id=$this->Id";
+			// echo " sql".$sql;
+            $cone =  new Database();
+			$statement = $cone->ejecutar_idu($sql);
+            if (!$statement)
+                return false;
+            else
+                return true;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
+    function eliminarDetalleTransporte()
+    {
+        try {
+
+            $sql = "DELETE FROM detalle_transporte WHERE Id=$this->Id";
+			// echo " sql".$sql;
+            $cone =  new Database();
+			$statement = $cone->ejecutar_idu($sql);
+            if (!$statement)
+                return false;
+            else
+                return true;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
 }
 ?>
