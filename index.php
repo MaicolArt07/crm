@@ -1,1 +1,1 @@
-<?php  header("Location: https://crm.breadking.shop/app/vista/login.php")?>
+<?php  header("Location: breadking.local/app/vista/login.php")?>

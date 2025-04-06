@@ -7,7 +7,7 @@
 //                 
 // Ultima Modificación: 17 de marzo de 2015
 // ======================================================
-    
+   
 class Database{
 	
     private $_connection;
@@ -15,10 +15,11 @@ class Database{
     private $_user = "user_bd_breadking";
     private $_pass = "79B8@tfb";
     private $_db   = "bd_breadking";*/
-    private $_host = "srv936.hstgr.io";
-    private $_user = "u330449319_u_bd_breadking";
-    private $_pass = "Br34dK1ng215Edw";
-    private $_db   = "u330449319_bd_breadking";
+    //private $_host = "srv936.hstgr.io";
+    private $_host = "localhost";
+    private $_user = "root";
+    private $_pass = "";
+    private $_db   = "bd_breadking";
     // Almacenar una unica instancia
     private static $_instancia;
     // ================================================
@@ -35,8 +36,10 @@ class Database{
     // ================================================
     public function __construct(){
         $this->_connection = new mysqli($this->_host,$this->_user,$this->_pass,$this->_db);
+		//mysqli_set_charset( $this->_connection,'utf8'); 
         // Manejar error en base de datos
         if (mysqli_connect_error()) {
+            echo "error de conexion";
             trigger_error('Falla en la conexion de base de datos'. mysqli_connect_error(), E_USER_ERROR );
         }
     }
@@ -56,10 +59,12 @@ class Database{
     }
 	
 	//liberar
-	public function cerrar(){
+	public function cerrar($data){
 		$db = DataBase::getInstancia();
         $mysqli = $db->getConnection();
+		
 		$mysqli->close();
+		echo " close_conect ";
 		//mysql_close($mysqli);
 		//unset($data,$mysqli);
 		
@@ -145,7 +150,7 @@ class Database{
     //     Funcion que ejecuta el SQL y retorna un jSon
     //     data: [{...}] con N cantidad de registros
     // ==================================================
-    public function get_json_rows($sql){
+    public function get_json_rows_utf($sql){
         if(!self::es_string($sql))
             exit();
         $db = DataBase::getInstancia();
@@ -158,17 +163,57 @@ class Database{
         $i = 0;
 		$resultado_str="";
         while($row = $resultado->fetch_assoc()){
-			//$encodedArray = array_map("utf8_encode", $row);
-            $encodedArray = array_map(function ($value) {
-                return is_string($value) ? mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1') : $value;
-            }, $row);
-			$resultado_str =  $resultado_str.json_encode($row);
+			$output[]=array_map("utf8_encode", $row);
             $i++;
         };
+		$resultado_str=json_encode($output);
 		return $resultado_str;
     }
 	
+	function utf8_string_array_encode(&$array){
+    $func = function(&$value,&$key){
+        if(is_string($value)){
+            $value = mb_convert_encoding($value, 'UTF-8');
+        }
+        if(is_string($key)){
+            $key = mb_convert_encoding($key, 'UTF-8');
+        }
+        if(is_array($value)){
+            utf8_string_array_encode($value);
+        }
+    };
+    array_walk($array,$func);
+    return $array;
+}
 	
+public function get_json_rows($sql){
+    if(!self::es_string($sql))
+        exit();
+    $db = DataBase::getInstancia();
+    $mysqli = $db->getConnection();
+    $resultado = $mysqli->query($sql);
+    // Si hay un error en el SQL, este es el error de MySQL
+    if (!$resultado) {
+        return "class.Database.class: error ". $mysqli->error;
+    }
+    $i = 0;
+    $resultado_str = "";
+    while($row = $resultado->fetch_assoc()){
+        if($i > 0){
+            $resultado_str = $resultado_str.", ";
+        }
+
+        // Usar mb_convert_encoding para garantizar que los datos estén en UTF-8
+        $output[] = array_map(function($value) {
+            return mb_convert_encoding($value, 'UTF-8', 'auto');  // Convertir a UTF-8
+        }, $row);
+
+        $resultado_str = $resultado_str.json_encode($row);
+        $i++;
+    }
+    return $resultado_str;
+}
+
     // ==================================================
     //     Funcion que ejecuta el SQL y retorna un jSon
     //     de una sola linea. Ideal para imprimir un
@@ -182,18 +227,11 @@ class Database{
         $resultado = $mysqli->query($sql);
         // Si hay un error en el SQL, este es el error de MySQL
         if (!$resultado ) {
-			echo "class.Database.class: error ". $mysqli->error;
             return "class.Database.class: error ". $mysqli->error;
         }
         if(!$row = $resultado->fetch_assoc()){
-			echo "{}";
             return "{}";
         }
-		//$resultado->free_results();
-		//$resultado->free();
-		while ($mysqli->next_result());
-		//$resultado->close();
-		//$mysqli->close();
         return json_encode( $row );
     }
     // ====================================================================
@@ -254,30 +292,78 @@ class Database{
             return false;
         
     }
+
+    
+	public function DesHabilitar_Commit() {
+        $mysqli = $this->_connection;
+        if ($mysqli) {
+            //echo 'Deshabilitando autocommit';
+            $mysqli->autocommit(FALSE);  // Deshabilita autocommit
+        } else {
+            echo 'Error: Conexión no disponible';
+        }
+    }
 	
-	public function DesHabilitar_Commit(){
-		//echo 'haciendo Commint';
-		$db = DataBase::getInstancia();
+    public function Commit() {
+        $mysqli = $this->_connection;
+        if ($mysqli) {
+            //echo 'Ejecutando commit';
+            $mysqli->commit();  // Ejecuta el commit
+        } else {
+            echo 'Error: Conexión no disponible';
+        }
+    }
+
+	public function rollback() {
+        if ($this->_connection) {
+            //echo 'Ejecutando rollback...';
+            $this->_connection->rollback();  // Ejecuta el rollback
+        } else {
+            echo 'Error: Conexión no disponible';
+        }
+    }
+
+    public function get_json_row_v1($sql) {
+        // Validar si el SQL es un string
+        if (!self::es_string($sql)) {
+            exit("Error: El SQL proporcionado no es válido.");
+        }
+    
+        // Obtener la instancia y conexión activa
+        $db = Database::getInstancia();
         $mysqli = $db->getConnection();
-		//$mysqli->close();
-		$mysqli->autocommit(FALSE);
-		//$mysqli->commit();
-	}
-	
-	public function Commit(){
-		//echo 'haciendo Commint';
-		$db = DataBase::getInstancia();
-        $mysqli = $db->getConnection();
-		//$mysqli->close();
-		$mysqli->commit();
-	}
-	
-	public function rollback(){
-		$db = DataBase::getInstancia();
-        $mysqli = $db->getConnection();
-		//echo 'haciendo rollback';
-		$mysqli->rollback();
-	}
-	
+    
+        // Verificar si la conexión es válida
+        if (!$mysqli) {
+            return "Error: No se pudo obtener la conexión.";
+        }
+    
+        // Ejecutar el query
+        $resultado = $mysqli->query($sql);
+    
+        // Verificar si hubo un error en la ejecución del query
+        if (!$resultado) {
+            return "Error en SQL: " . $mysqli->error;
+        }
+    
+        // **Liberar cualquier resultado previo pendiente**
+        while ($mysqli->more_results() && $mysqli->next_result()) {
+            $res = $mysqli->store_result();
+            if ($res) {
+                $res->free(); // Liberar memoria
+            }
+        }
+    
+        // Obtener la fila si existe, o devolver un objeto vacío
+        $row = $resultado->fetch_assoc();
+        $resultado->free(); // Asegurarse de liberar el resultado actual
+    
+        if (!$row) {
+            return json_encode(new stdClass()); // Devuelve "{}" como un objeto vacío
+        }
+    
+        // Devolver la fila como JSON
+        return json_encode($row);
+    }
 }
 ?>

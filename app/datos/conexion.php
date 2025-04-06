@@ -2,14 +2,14 @@
 
 class Conexion {
 
-    private $host = 'mysql.lacomuna.net';
-    private $user = 'lacomuna';
-    private $password = 'LaComuna.123';
-    private $database = 'lacomuna';
+    private $host = 'localhost';
+    private $user = 'root';
+    private $password = '';
+    private $database = 'bd_';
     private $link;
     private $statement;
     static $_instance;
-
+    
     private function __construct() {
         $this->conectar();
     }
