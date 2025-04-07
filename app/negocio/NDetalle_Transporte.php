@@ -25,11 +25,11 @@ if (isset($_REQUEST['funcion'])) {
             $response_detalle_transporte = $detalle_transporte->modificarDetalleTransporte($id_detalle, $cantidad, $cantidad_disponible);
             echo json_encode($response_detalle_transporte);
         break;
-        case "eliminar_detalle_transporte":
-            $id_detalle = $_REQUEST['id_detalle'];
-            $response_detalle_transporte = $detalle_transporte->eliminarDetalleTransporte($id_detalle);
-            echo json_encode($response_detalle_transporte);
-        break;
+        // case "eliminar_detalle_transporte":
+        //     $id_detalle = $_REQUEST['id_detalle'];
+        //     $response_detalle_transporte = $detalle_transporte->eliminarDetalleTransporte($id_detalle);
+        //     echo json_encode($response_detalle_transporte);
+        // break;
     }
 }
 
@@ -40,6 +40,7 @@ class NDetalleTransporte
     {
         $detalle_transporte = new DDetalleTransporte();
         $detalle_transporte->setIdTransportar($id_transporte);
+        // ! Esta funcion no existe en la clase detalle transporte, no se realizo ningun cambio ya inicio con el proyecto.
         $lista = $detalle_transporte->listadoDetalleTransporte();
         echo $lista;
     }
@@ -69,15 +70,22 @@ class NDetalleTransporte
         $detalle_transporte->setCantidad($cantidad);
         $detalle_transporte->setDisponible($cantidad_disponible);
 		$response = $detalle_transporte->modificarDetalleTransporte();
+
+        // Si las cantidad es igual a cero y la cantidad disponible del mismo modo eliminamos el detalle
+        if($cantidad <= 0 && $cantidad_disponible <= 0)
+        {
+            $detalle_transporte->eliminarDetalleTransporte();
+        }
+        
         return $response;
     }
 
-    public function eliminarDetalleTransporte($id_detalle)
-    {
-        $detalle_transporte = new DDetalleTransporte();
-        $detalle_transporte->setId($id_detalle);
-		$response = $detalle_transporte->eliminarDetalleTransporte();
-        return $response;
-    }
+    // public function eliminarDetalleTransporte($id_detalle)
+    // {
+    //     $detalle_transporte = new DDetalleTransporte();
+    //     $detalle_transporte->setId($id_detalle);
+	// 	$response = $detalle_transporte->eliminarDetalleTransporte();
+    //     return $response;
+    // }
 }
  ?>

@@ -162,30 +162,30 @@ $(document).ready(function () {
         var cantidad_actual = parseInt(row.find('td').eq(4).text()); // Obtener la cantidad actual
         var cantidad_disponible = parseInt(row.find('td').eq(3).text()); // Obtener la cantidad disponible
     
-        if(cantidad_actual == cantidad_disponible)
-        {
-            if(confirm("Las cantidades son iguales, ¿Deseas eliminar el detalle?"))
-            {
-                $.ajax({
-                    url: '../../negocio/NDetalle_Transporte.php?funcion=eliminar_detalle_transporte', // Asegúrate de tener esta función en tu PHP
-                    type: 'POST',
-                    data: {
-                        id_detalle: id_detalle,
-                    },
-                    success: function(response) 
-                    {
-                        console.log(response);
-                        if(response) {
-                            $('#dt_detalle_ant').DataTable().ajax.reload();
-                            // Cerrar el modal
-                            $('#modal_edit_cantidad').modal('hide');
-                        } else {
-                            alert('Error al actualizar la cantidad');
-                        }
-                    }
-                });
-            }
-        }else{
+        // if(cantidad_actual == cantidad_disponible)
+        // {
+            //     if(confirm("Las cantidades son iguales, ¿Deseas eliminar el detalle?"))
+            //     {
+            //         $.ajax({
+            //             url: '../../negocio/NDetalle_Transporte.php?funcion=eliminar_detalle_transporte', // Asegúrate de tener esta función en tu PHP
+            //             type: 'POST',
+            //             data: {
+            //                 id_detalle: id_detalle,
+            //             },
+            //             success: function(response) 
+            //             {
+            //                 console.log(response);
+            //                 if(response) {
+            //                     $('#dt_detalle_ant').DataTable().ajax.reload();
+            //                     // Cerrar el modal
+            //                     $('#modal_edit_cantidad').modal('hide');
+            //                 } else {
+            //                     alert('Error al actualizar la cantidad');
+            //                 }
+            //             }
+            //         });
+            //     }
+            // }else{
             if (cantidad_disponible > 0) 
             {
                 // Llenar el campo del modal con la cantidad actual y disponible
@@ -204,7 +204,7 @@ $(document).ready(function () {
             } else {
                 alert("No tienes una cantidad disponible");
             }
-        }
+        // }
 
 
     });
