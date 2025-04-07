@@ -282,11 +282,21 @@ $estado = $_GET['E'];
             <div class="modal-body">
                 <form id="form_edit_cantidad">
                     <div class="form-group">
-                        <label for="edit_cantidad_disponible">Cantidad Disponible</label>
-                        <input id="edit_cantidad_disponible" type="number" class="form-control" disabled>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="edit_cantidad_disponible">Cantidad Disponible</label>
+                                <input id="edit_cantidad_disponible" type="number" class="form-control" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit_cantidad">Cantidad</label>
+                                <input id="edit_cantidad" type="number" class="form-control" disabled>
+                            </div>
 
-                        <label for="edit_cantidad">Cantidad</label>
-                        <input id="edit_cantidad" type="number" class="form-control" required>
+                            <div class="col-md-12" style="margin-top: 10px;">
+                                <label for="edit_cantidad">Cantidad A Retirar</label>
+                                <input id="cantidad_retirar" type="number" class="form-control" required>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

@@ -209,87 +209,80 @@ $(document).ready(function () {
 
     });
     
-    $('#edit_cantidad').on('change', function() {
-        let cantidad_original = parseInt($(this).data('cantidad-original')); // Recuperar la cantidad original
-        var cantidad_ingresada = parseInt($(this).val());
-        var cantidad_disponible_original = parseInt($('#edit_cantidad_disponible').data('cantidad-disponible-original')); // Recuperar la cantidad disponible original
+    $('#modal_edit_cantidad').on('show.bs.modal', function () {
+        cantidadOriginal = parseInt($('#edit_cantidad').val()) || 0;
+        cantidadDisponibleOriginal = parseInt($('#edit_cantidad_disponible').val()) || 0;
     
-        // Evitar valores no válidos
-        if (isNaN(cantidad_ingresada) || cantidad_ingresada < 0) {
-            $(this).val(cantidad_original);
-            return;
-        }
-    
-        console.log('Cantidad Original:', cantidad_original);
-        console.log('Cantidad Ingresada:', cantidad_ingresada);
-        console.log('Cantidad Disponible Original:', cantidad_disponible_original);
-    
-        // Solo se permite disminuir la cantidad ingresada
-        if (cantidad_ingresada > cantidad_original) {
-            alert('No puedes aumentar la cantidad. Solo puedes disminuirla.');
-            $(this).val(cantidad_original);
-            return;
-        }
-    
-        // Restablecer la cantidad disponible al valor original antes de recalcular
-        var nueva_cantidad_disponible = cantidad_disponible_original - (cantidad_original - cantidad_ingresada);
-    
-        // * Solo se permite disminuir la cantidad ingresada y ademas no se permite que sobre pase la cantidad disponible
-        if (cantidad_ingresada > cantidad_original) {
-            alert('No puedes aumentar la cantidad. Solo puedes disminuirla.');
-            $(this).val(cantidad_original);
-            return;
-        }else if(nueva_cantidad_disponible < 0)
-        {
-            alert(`No debes pasarte de la cantidad de: ${cantidad_disponible_original}`);
-            $(this).val(cantidad_original);
-            $("#edit_cantidad_disponible").val(cantidad_disponible_original);
-            return;
-        }
-        // Actualizar la cantidad disponible
-        $('#edit_cantidad_disponible').val(nueva_cantidad_disponible);
+        // También puedes guardarlos en data-atributos si prefieres
+        $('#edit_cantidad').data('cantidad-original', cantidadOriginal);
+        $('#edit_cantidad_disponible').data('cantidad-disponible-original', cantidadDisponibleOriginal);
     });
-    
-    // Evento para guardar la nueva cantidad
-    $('#btn_update_cantidad').on('click', function() 
-    {
-        var nueva_cantidad = $('#edit_cantidad').val();
-        var cantidad_disponible = $('#edit_cantidad_disponible').val();
-        var id_detalle = $(this).data('id_detalle'); // Obtener el ID de detalle
 
-        if(nueva_cantidad && id_detalle) 
-        {
-            // Validar que la cantidad no sea mayor que la cantidad disponible
-            if(parseInt(cantidad_disponible) < 0) {
-                alert('La cantidad disponible no puede ser menor a cero, revisa los datos');
-                return;
-            }
-            console.log(nueva_cantidad);
+// Validar la cantidad a retirar
+$('#cantidad_retirar').on('input', function () {
+    let retirar = parseInt($(this).val()) || 0;
 
-            // Aquí puedes realizar la llamada AJAX para actualizar la cantidad en la base de datos
-            $.ajax({
-                url: '../../negocio/NDetalle_Transporte.php?funcion=actualizar_detalle_transporte', // Asegúrate de tener esta función en tu PHP
-                type: 'POST',
-                data: {
-                    id_detalle: id_detalle,
-                    cantidad: nueva_cantidad,
-                    disponible: cantidad_disponible
-                },
-                success: function(response) 
-                {
-                    if(response) {
-                        $('#dt_detalle_ant').DataTable().ajax.reload();
-                        // Cerrar el modal
-                        $('#modal_edit_cantidad').modal('hide');
-                    } else {
-                        alert('Error al actualizar la cantidad');
-                    }
+    if (retirar > cantidadDisponibleOriginal) {
+        alert(`No puedes retirar más de lo disponible (${cantidadDisponibleOriginal}).`);
+        
+        // Restaurar valores
+        $('#edit_cantidad').val(cantidadOriginal);
+        $('#edit_cantidad_disponible').val(cantidadDisponibleOriginal);
+        $(this).val('');
+        return;
+    }
+
+    // Calcular nuevos valores
+    let nuevaCantidad = cantidadOriginal - retirar;
+    let nuevoDisponible = cantidadDisponibleOriginal - retirar;
+
+    if (nuevaCantidad < 0 || nuevoDisponible < 0) {
+        alert('La cantidad a retirar no puede dejar cantidades negativas.');
+        $('#edit_cantidad').val(cantidadOriginal);
+        $('#edit_cantidad_disponible').val(cantidadDisponibleOriginal);
+        $(this).val('');
+        return;
+    }
+
+    // Actualizar los campos
+    $('#edit_cantidad').val(nuevaCantidad);
+    $('#edit_cantidad_disponible').val(nuevoDisponible);
+});
+
+// Guardar
+$('#btn_update_cantidad').on('click', function () {
+    let nueva_cantidad = $('#edit_cantidad').val();
+    let cantidad_disponible = $('#edit_cantidad_disponible').val();
+    let id_detalle = $(this).data('id_detalle');
+    let cantidad_retirar = $('#cantidad_retirar').val();
+    if (nueva_cantidad && id_detalle && cantidad_retirar) {
+        if (parseInt(cantidad_disponible) < 0) {
+            alert('La cantidad disponible no puede ser menor a cero.');
+            return;
+        }
+
+        $.ajax({
+            url: '../../negocio/NDetalle_Transporte.php?funcion=actualizar_detalle_transporte',
+            type: 'POST',
+            data: {
+                id_detalle: id_detalle,
+                cantidad: nueva_cantidad,
+                disponible: cantidad_disponible
+            },
+            success: function (response) {
+                if (response) {
+                    $('#dt_detalle_ant').DataTable().ajax.reload();
+                    $('#modal_edit_cantidad').modal('hide');
+                    $('#cantidad_retirar').val('');
+                } else {
+                    alert('Error al actualizar la cantidad.');
                 }
-            });
-        } else {
-            alert('Por favor ingrese una cantidad válida.');
-        }
-    });
+            }
+        });
+    } else {
+        alert('Por favor ingrese una cantidad válida.');
+    }
+});
 
     // Funcionalidad para modificar la cantidad del transporte
 
