@@ -173,10 +173,10 @@ class Database{
 	function utf8_string_array_encode(&$array){
     $func = function(&$value,&$key){
         if(is_string($value)){
-            $value = mb_convert_encoding($value, 'UTF-8');
+            $value = utf8_encode($value);
         }
         if(is_string($key)){
-            $key = mb_convert_encoding($key, 'UTF-8');
+            $key = utf8_encode($key);
         }
         if(is_array($value)){
             utf8_string_array_encode($value);
@@ -186,34 +186,33 @@ class Database{
     return $array;
 }
 	
-public function get_json_rows($sql){
-    if(!self::es_string($sql))
-        exit();
-    $db = DataBase::getInstancia();
-    $mysqli = $db->getConnection();
-    $resultado = $mysqli->query($sql);
-    // Si hay un error en el SQL, este es el error de MySQL
-    if (!$resultado) {
-        return "class.Database.class: error ". $mysqli->error;
-    }
-    $i = 0;
-    $resultado_str = "";
-    while($row = $resultado->fetch_assoc()){
-        if($i > 0){
-            $resultado_str = $resultado_str.", ";
+    public function get_json_rows($sql){
+        if(!self::es_string($sql))
+            exit();
+        $db = DataBase::getInstancia();
+        $mysqli = $db->getConnection();
+        $resultado = $mysqli->query($sql);
+        // Si hay un error en el SQL, este es el error de MySQL
+        if (!$resultado) {
+            return "class.Database.class: error ". $mysqli->error;
         }
+        $i = 0;
+        $resultado_str = "";
+        while($row = $resultado->fetch_assoc()){
+            if($i > 0){
+                $resultado_str = $resultado_str.", ";
+            }
 
-        // Usar mb_convert_encoding para garantizar que los datos estén en UTF-8
-        $output[] = array_map(function($value) {
-            return mb_convert_encoding($value, 'UTF-8', 'auto');  // Convertir a UTF-8
-        }, $row);
+            // Usar mb_convert_encoding para garantizar que los datos estén en UTF-8
+            $output[] = array_map(function($value) {
+                return mb_convert_encoding($value, 'UTF-8', 'auto');  // Convertir a UTF-8
+            }, $row);
 
-        $resultado_str = $resultado_str.json_encode($row);
-        $i++;
+            $resultado_str = $resultado_str.json_encode($row);
+            $i++;
+        }
+        return $resultado_str;
     }
-    return $resultado_str;
-}
-
     // ==================================================
     //     Funcion que ejecuta el SQL y retorna un jSon
     //     de una sola linea. Ideal para imprimir un

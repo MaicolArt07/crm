@@ -71,6 +71,10 @@ class NDetalleTransporte
         $detalle_transporte->setDisponible($cantidad_disponible);
 		$response = $detalle_transporte->modificarDetalleTransporte();
 
+        if($response)
+        {
+            $detalle_transporte->aumentarOrdenProduccion();
+        }
         // Si las cantidad es igual a cero y la cantidad disponible del mismo modo eliminamos el detalle
         if($cantidad <= 0 && $cantidad_disponible <= 0)
         {

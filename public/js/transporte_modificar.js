@@ -270,6 +270,7 @@ $('#btn_update_cantidad').on('click', function () {
                 disponible: cantidad_disponible
             },
             success: function (response) {
+                console.log(response)
                 if (response) {
                     $('#dt_detalle_ant').DataTable().ajax.reload();
                     $('#modal_edit_cantidad').modal('hide');

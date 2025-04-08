@@ -9,6 +9,7 @@ class DDetalleTransporte
     private $tabla = 'Detalle_Transporte';
     private $Id;
     private $Id_Transportar;
+    private $Id_Orden_Produccion;
     private $Id_Producto;
     private $Cantidad;
     private $Disponible;
@@ -41,6 +42,22 @@ class DDetalleTransporte
      * @param mixed $Id_Transportar
      */
     public function setIdTransportar($Id_Transportar)
+    {
+        $this->Id_Transportar = $Id_Transportar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdOrdenTransportar()
+    {
+        return $this->Id_Transportar;
+    }
+
+    /**
+     * @param mixed $Id_Transportar
+     */
+    public function setIdOrdenTransportar($Id_Transportar)
     {
         $this->Id_Transportar = $Id_Transportar;
     }
@@ -229,7 +246,7 @@ class DDetalleTransporte
     {
         try {
             
-            $sql = "UPDATE detalle_transporte SET Cantidad='$this->Cantidad', Disponible='$this->Disponible' WHERE Id=$this->Id";
+            $sql = "UPDATE Detalle_Transporte SET Cantidad=$this->Cantidad, Disponible=$this->Disponible WHERE Id=$this->Id";
 			// echo " sql".$sql;
             $cone =  new Database();
 			$statement = $cone->ejecutar_idu($sql);
@@ -242,20 +259,53 @@ class DDetalleTransporte
         }
     }
 
-        function eliminarDetalleTransporte()
-        {
-            try {
-                $sql = "DELETE FROM detalle_transporte WHERE Id=$this->Id";
-                // echo " sql".$sql;
-                $cone =  new Database();
-                $statement = $cone->ejecutar_idu($sql);
-                if (!$statement)
-                    return false;
-                else
-                    return true;
-            } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
-            }
+    function eliminarDetalleTransporte()
+    {
+        try {
+            $sql = "DELETE FROM Detalle_Transporte WHERE Id=$this->Id";
+            // echo " sql".$sql;
+            $cone =  new Database();
+            $statement = $cone->ejecutar_idu($sql);
+            if (!$statement)
+                return false;
+            else
+                return true;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
         }
+    }
+    
+    function aumentarOrdenProduccion()
+    {
+        // Buscamos la orden la produccion por el detalle de transporte y aumentamos su orden debido a la modificacion del detalle anterior
+            $sql = "SELECT Detalle_Transporte.Id_Orden_Produccion, Orden_Produccion.Cantidad_Disponible
+                    FROM Detalle_Transporte 
+                    INNER JOIN Orden_Produccion ON Detalle_Transporte.Id_Orden_Produccion=Orden_Produccion.Id
+                    WHERE Detalle_Transporte.Id=$this->Id";
+            
+            $cone = new Database();
+            $result = $cone->get_Row($sql);
+
+            try {
+                $cone = new Database();
+                $result = $cone->get_Row($sql);
+        
+                if ($result) 
+                {
+                    $id_orden_transporte = $result['Id_Orden_Transporte'];
+                    $cantidad_disponible = $result['Cantidad_Disponible'];
+                    $cantidad_total = $cantidad_disponible + $this->Cantidad;
+                    // Actualizamos la cantidad disponible de la orden
+                    $sql_actualizar_orden = "UPDATE Orden_Produccion SET Cantidad_Disponible = '$cantidad_total' WHERE Orden_Produccion.Id = $id_orden_transporte";
+                    if($sql_actualizar_orden)
+                    {
+                        return true;
+                    }
+                }
+                
+            } catch (Exception $exc) {
+                echo 'Error al modificar detalle de transporte: ' . $exc->getMessage();
+            }
+    }
 }
 ?>
