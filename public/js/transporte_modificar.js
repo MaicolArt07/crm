@@ -267,7 +267,8 @@ $('#btn_update_cantidad').on('click', function () {
             data: {
                 id_detalle: id_detalle,
                 cantidad: nueva_cantidad,
-                disponible: cantidad_disponible
+                disponible: cantidad_disponible,
+                cantidad_retirar: cantidad_retirar
             },
             success: function (response) {
                 console.log(response)

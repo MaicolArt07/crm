@@ -22,7 +22,9 @@ if (isset($_REQUEST['funcion'])) {
             $id_detalle = $_REQUEST['id_detalle'];
             $cantidad = $_REQUEST['cantidad'];
             $cantidad_disponible = $_REQUEST['disponible'];
-            $response_detalle_transporte = $detalle_transporte->modificarDetalleTransporte($id_detalle, $cantidad, $cantidad_disponible);
+            $cantidad_retirar = $_REQUEST['cantidad_retirar'];
+
+            $response_detalle_transporte = $detalle_transporte->modificarDetalleTransporte($id_detalle, $cantidad, $cantidad_disponible,$cantidad_retirar);
             echo json_encode($response_detalle_transporte);
         break;
         // case "eliminar_detalle_transporte":
@@ -63,12 +65,14 @@ class NDetalleTransporte
         echo $lista_detalle;
     }
 
-    public function modificarDetalleTransporte($id_detalle, $cantidad, $cantidad_disponible)
+    public function modificarDetalleTransporte($id_detalle, $cantidad, $cantidad_disponible, $cantidad_retirar)
     {
         $detalle_transporte = new DDetalleTransporte();
         $detalle_transporte->setId($id_detalle);
         $detalle_transporte->setCantidad($cantidad);
         $detalle_transporte->setDisponible($cantidad_disponible);
+        $detalle_transporte->setCantidadRetirar($cantidad_retirar);
+
 		$response = $detalle_transporte->modificarDetalleTransporte();
 
         if($response)

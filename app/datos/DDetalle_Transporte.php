@@ -9,7 +9,7 @@ class DDetalleTransporte
     private $tabla = 'Detalle_Transporte';
     private $Id;
     private $Id_Transportar;
-    private $Id_Orden_Produccion;
+    private $Cantidad_Retirar;
     private $Id_Producto;
     private $Cantidad;
     private $Disponible;
@@ -49,17 +49,17 @@ class DDetalleTransporte
     /**
      * @return mixed
      */
-    public function getIdOrdenTransportar()
+    public function getCantidadRetirar()
     {
-        return $this->Id_Transportar;
+        return $this->Cantidad_Retirar;
     }
 
     /**
      * @param mixed $Id_Transportar
      */
-    public function setIdOrdenTransportar($Id_Transportar)
+    public function setCantidadRetirar($Cantidad_Retirar)
     {
-        $this->Id_Transportar = $Id_Transportar;
+        $this->Cantidad_Retirar = $Cantidad_Retirar;
     }
 
     /**
@@ -287,17 +287,18 @@ class DDetalleTransporte
             $result = $cone->get_Row($sql);
 
             try {
-                $cone = new Database();
-                $result = $cone->get_Row($sql);
         
                 if ($result) 
                 {
-                    $id_orden_transporte = $result['Id_Orden_Transporte'];
+                    $id_orden_transporte = $result['Id_Orden_Produccion'];
                     $cantidad_disponible = $result['Cantidad_Disponible'];
-                    $cantidad_total = $cantidad_disponible + $this->Cantidad;
+                    
+                    $cantidad_total = $cantidad_disponible + $this->Cantidad_Retirar;
                     // Actualizamos la cantidad disponible de la orden
                     $sql_actualizar_orden = "UPDATE Orden_Produccion SET Cantidad_Disponible = '$cantidad_total' WHERE Orden_Produccion.Id = $id_orden_transporte";
-                    if($sql_actualizar_orden)
+                    $result_update = $cone->ejecutar_idu($sql_actualizar_orden);
+
+                    if($result_update)
                     {
                         return true;
                     }
