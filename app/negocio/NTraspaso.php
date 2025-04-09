@@ -1,36 +1,35 @@
 <?php
 require $_SERVER['DOCUMENT_ROOT'] . '/app/datos/DTraspaso.php';
-// require $_SERVER['DOCUMENT_ROOT'] . '/app/datos/DDetalle_Transporte.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/app/datos/DDetalle_Traspaso.php';
+
 //$vector = array("Id"=>"1", "Fecha"=>"01-02-2023", "Usuario"=>"eder","Estado"=>"1");
 //echo json_encode($vector);
-if (isset($_REQUEST['funcion'])) {
+if (isset($_REQUEST['funcion'])) 
+{
 	$traspaso = new NTraspaso();
-    switch ($_REQUEST['funcion']) {
+    switch ($_REQUEST['funcion']) 
+    {
         case "insertar":
-            $id_usuario = $_POST['id_usuario'];
             $fecha = $_POST['fecha'];
             $detalle = json_decode($_POST['detalle'], true);  // Decodifica el JSON recibido
-        
-            // Llama a la función para insertar el transporte
-            $traspaso->insertarTransporte($id_usuario, $fecha, $detalle);
+            $traspaso->insertarTraspaso($fecha, $detalle);
             break;
-		// case "agregar_producto":
-		// 	$id_transporte = $_POST['id_transporte'];
-        //     $detalle_transporte = $_POST['detalle_transporte'];
-        //     $transportar->agregarProductoTransporte($id_transporte, $detalle_transporte);
-        //     break;
+
         case "listadoTraspasos":
             $traspaso->listadoTraspasos();
         break;
         case "detalleTransporteAbiertos":
             $traspaso->detalleTransporteAbiertos();
         break;
-
-        case "trasportesAbiertos":
+        case "transportesTranspasos":
+            $id_usuario = $_REQUEST['id_usuario'];
+            $traspaso->transportesTranspasos($id_usuario);
+        break;
+        
+        case "productosTransporteOrigen":
             $id_usuario = $_REQUEST["id_usuario"];
-            $id_producto = $_REQUEST["id_producto"];
-            
-            $traspaso->trasportesAbiertos($id_usuario, $id_producto);
+            $id_transporte_origen = $_REQUEST["id_transporte"];
+            $traspaso->productosTransporteOrigen($id_usuario, $id_transporte_origen);
         break;
         
 
@@ -43,47 +42,62 @@ if (isset($_REQUEST['funcion'])) {
 
 class NTraspaso
 {
-    public function insertarTransporte($id_usuario, $fecha, $detalle)
+    public function insertarTraspaso($fecha, $detalle)
     {
         $traspaso = new DTraspaso();
-		$fecha_formato = $traspaso->formatDate($fecha);
+        $fecha_formato = $traspaso->formatDate($fecha);
         $traspaso->setFecha($fecha_formato);
         
         foreach ($detalle as $value) 
         {
-            $id_detalle = $value['idDetalle'];
-            $id_transporte = $value['idTransporte'];
-            $cantidad = $value['cantidad'];
-            $id_producto = $value['idProducto'];
+            $id_detalle = $value['id_detalle'];
+            $id_transporte_origen = $value['id_transporte_origen'];
+            $id_transporte_destino = $value['id_transporte_destino'];
+            $id_usuario_transporte = $value['id_usuario_transporte'];
+            $id_usuario_destino = $value['id_usuario_destino'];
+            $producto = $value['producto'];
+            $usuario = $value['usuario'];
+            $cantidad_disponible = $value['cantidad_disponible'];
+            $transporte_destino = $value['transporte_destino'];
+            $cantidad_traspaso = $value['cantidad_traspaso'];
+            $id_producto = $value['id_producto'];
+            $id_usuario = $value['id_usuario'];
 
+    
+            $traspaso->setIdTransporteOrigen($id_transporte_origen);
+            $traspaso->setIdTransporteDestino($id_transporte_destino);
+            $traspaso->setIdUsuario($id_usuario);
 
-            $traspaso->setIdTrasporteDestino($id_transporte);
-            $traspaso->setIdDetalleTransporte($id_detalle);
-            $traspaso->setIdDetalleCantidadTraspaso($cantidad);
-            $traspaso->setIdProducto($id_producto);
+            // $traspaso->setIdDetalleTransporte($id_detalle);
+            // $traspaso->setIdDetalleCantidadTraspaso($cantidad);
+            // $traspaso->setIdProducto($id_producto);
 
             $result = $traspaso->insertarTraspaso();
 
             if($result)
             {
                 $id_traspaso = $traspaso->getId();
-                $detalle = $traspaso->insertarDetalleTraspaso($id_traspaso);
+
+                // Creamos una instancia en el detalle para obtener sus atributos y funcionalidades
+                $detalle_traspaso = new DDetalleTraspaso();
+
+                $detalle_traspaso->setIdTraspaso($id_traspaso);
+                $detalle_traspaso->setCantidad($cantidad_traspaso);
+                $detalle_traspaso->setIdDetalleTraspasoOrigen($id_detalle);
+
+                $detalle = $detalle_traspaso->insertarDetalleTranporteDestino();
 
                 if($detalle)
                 {
-                    $modificar_transporte = $traspaso->modificarDetalleTransporte();
-                    if($modificar_transporte)
-                    {
-                        $actualizar_detalle_transpaso = $traspaso->actualizarDetalleTransporteDestino();
-                        
-                    }
+                    // Insertamos en el detalel traspaso
+                    $detalle_traspaso = $detalle_traspaso->insertarDetalleTraspaso($id_traspaso, $fecha);
                 }
             }else{
                 break;
             }
         }
 
-            if($actualizar_detalle_transpaso)
+            if($detalle_traspaso)
             {
                 echo "Se guardó la orden de Transporte";
             }else{
@@ -158,12 +172,21 @@ class NTraspaso
         echo $lista;
     }
 
-    public function trasportesAbiertos($id_usuario, $id_producto)
+    public function transportesTranspasos($id_usuario)
     {
         $traspaso = new DTraspaso();
         $traspaso->setIdUsuario($id_usuario);
+        $lista = $traspaso->transportesTranspasos();
+        echo $lista;
+    }
 
-        $lista = $traspaso->trasportesAbiertos();
+    public function productosTransporteOrigen($id_usuario, $id_transporte_origen)
+    {
+        $traspaso = new DTraspaso();
+        $traspaso->setIdUsuario($id_usuario);
+        $traspaso->setIdTransporteOrigen($id_transporte_origen);
+
+        $lista = $traspaso->productosTransporteOrigen();
         echo $lista;
     }
 

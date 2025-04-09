@@ -108,14 +108,12 @@ $usuario = new DUsuario();
                                 </div>
                             </div>
 							
-                        </div>
-						
-						<div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="producto">Trasporte Origen</label>
                                     <div class="input-group">
                                         <input id="id_usuario_transporte" type="hidden">
+                                        <input id="id_transporte_origen" type="hidden">
                                         <input id="usuario" type="text" name="usuario"
                                                 readonly
                                                class="form-control"><span class="input-group-btn">
@@ -125,9 +123,28 @@ $usuario = new DUsuario();
                                     </div>
                                 </div>
                             </div>
+
+                        </div>
+						
+						<div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="producto">Producto</label>
+                                    <div class="input-group">
+                                        <input id="id_producto" type="hidden">
+                                        <input id="producto" type="text" name="producto"
+                                                readonly
+                                               class="form-control"><span class="input-group-btn">
+                                               <button type="button" class="btn btn-outline btn-default"
+                                                        data-toggle="modal" data-target="#modal-producto-transporte">
+                                                    <i class="ti ti-search"></i>
+                                                </button>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Input ocultado Id -->
-                            <input id="id_producto" type="hidden">
-                            <input id="producto_origen" type="hidden">
+                            <!-- <input id="id_producto" type="hidden"> -->
+                            <!-- <input id="producto_origen" type="hidden"> -->
                             <input id="id_detalle" type="hidden">
 
 
@@ -150,12 +167,14 @@ $usuario = new DUsuario();
                                 </div>
                             </div>
 							
+
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="transporte-destino">Transporte Destino</label>
                                     <div class="input-group">
-                                        <input id="id_transporte" type="hidden">
-                                        <input id="usuario_destino" type="text" name="usuario_destino" class="form-control" readonly/>
+                                        <input id="id_transporte_destino" type="hidden">
+                                        <input id="id_usuario_destino" type="hidden">
+                                        <input id="transporte_destino" type="text" name="transporte_destino" class="form-control" readonly/>
                                             <span class="input-group-btn">
                                                <button type="button" class="btn btn-outline btn-default"
                                                     data-toggle="modal" data-target="#modal-traspaso-destino">
@@ -166,6 +185,7 @@ $usuario = new DUsuario();
                                 </div>
                             </div>
 
+                            
 							<div class="col-md-12">
                             <div class="form-group">
                                 <div class="row pull-right">
@@ -188,13 +208,15 @@ $usuario = new DUsuario();
                                     <thead>
                                     <tr>
                                         <th data-orderable="false" class="no-sort">Id Detalle</th>
-                                        <th data-orderable="false" class="no-sort">Id Transporte</th>
+                                        <th data-orderable="false" class="no-sort">Id Transporte Origen</th>
+                                        <th data-orderable="false" class="no-sort">Id Transporte Destino</th>
                                         <th data-orderable="false" class="no-sort">Id Usuario Transporte</th>
-                                        <th data-orderable="false" class="no-sort">Cantidad Disponible</th>
-                                        <th>Transporte Origen</th>
+                                        <th data-orderable="false" class="no-sort">Id Usuario Destino</th>
                                         <th>Producto</th>
-                                        <th>Cantidad</th>
+                                        <th>Transporte Origen</th>
+                                        <th>Cantidad Disponible</th>
                                         <th>Transporte Destino</th>
+                                        <th>Cantidad Traspaso</th>
                                         <th data-orderable="false" class="no-sort">Id Producto</th>
                                     </tr>
                                     </thead>
@@ -223,7 +245,7 @@ $usuario = new DUsuario();
                     <div class="modal-header">
                         <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
                                     aria-hidden="true">×</span></button>
-                        <h4 class="modal-title">Listado de transportes origen</h4>
+                        <h4 class="modal-title">Listado Transportes Origen</h4>
                     </div>
                     <div class="modal-body">
                         <table id="traspaso_origen" style="width: 100%"
@@ -231,12 +253,8 @@ $usuario = new DUsuario();
                             <thead>
                             <tr>
                                 <th>Id</th>
+                                <th>Id Transporte</th>
                                 <th>Usuario</th>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Disponible</th>
-                                <th>ID Usuario</th>
-                                <th>ID Producto</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -261,7 +279,7 @@ $usuario = new DUsuario();
                     <div class="modal-header">
                         <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
                                     aria-hidden="true">×</span></button>
-                        <h4 class="modal-title">Listado de transportes destino</h4>
+                        <h4 class="modal-title">Listado Transportes Destino</h4>
                     </div>
                     <div class="modal-body">
                         <table id="traspaso_destino" style="width: 100%"
@@ -269,6 +287,7 @@ $usuario = new DUsuario();
                             <thead>
                             <tr>
                                 <th>Id</th>
+                                <th>Id Transporte</th>
                                 <th>Usuario</th>
                             </tr>
                             </thead>
@@ -276,7 +295,6 @@ $usuario = new DUsuario();
 
                             </tbody>
                         </table>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">Cancelar
@@ -288,6 +306,44 @@ $usuario = new DUsuario();
             </div>
         </div>
 
+
+        <div id="modal-producto-transporte" tabindex="-1" role="dialog" class="modal fade text-left">
+            <div role="document" class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+                                    aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">Listado de productos</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="producto-transporte" style="width: 100%"
+                               class="table table-striped table-bordered dt-responsive table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Id Transportar</th>
+                                <th>Id Produccion</th>
+                                <th>Id Orden Produccion</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Disponible</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-raised btn-black seleccionar-producto">Seleccionar productos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
