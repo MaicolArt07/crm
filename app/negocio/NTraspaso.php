@@ -15,8 +15,8 @@ if (isset($_REQUEST['funcion']))
             $traspaso->insertarTraspaso($fecha, $detalle);
             break;
 
-        case "listadoTraspasos":
-            $traspaso->listadoTraspasos();
+        case "listaDetalleTraspaso":
+            $traspaso->listaDetalleTraspaso();
         break;
         case "detalleTransporteAbiertos":
             $traspaso->detalleTransporteAbiertos();
@@ -85,12 +85,18 @@ class NTraspaso
                 $detalle_traspaso->setCantidad($cantidad_traspaso);
                 $detalle_traspaso->setIdDetalleTraspasoOrigen($id_detalle);
 
-                $detalle = $detalle_traspaso->insertarDetalleTranporteDestino();
+                $detalle = $detalle_traspaso->insertarDetalleTranporteDestino($id_transporte_destino);
 
                 if($detalle)
                 {
-                    // Insertamos en el detalel traspaso
-                    $detalle_traspaso = $detalle_traspaso->insertarDetalleTraspaso($id_traspaso, $fecha);
+                    // Insertamos en el detalle traspaso
+                    $respuesta_detalle_traspaso = $detalle_traspaso->insertarDetalleTraspaso($id_traspaso, $fecha_formato);
+                    
+                    // Una vez insertado actualizamos el detalle origen de su cantidad y disponible
+                    if($respuesta_detalle_traspaso)
+                    {
+                        $detalle_traspaso->actualizarDetalleTransporte();
+                    }
                 }
             }else{
                 break;
@@ -158,10 +164,10 @@ class NTraspaso
     //         echo 'Orden de transporte guardada satisfactoriamente.';
     // }
 
-    public function listadoTraspasos()
+    public function listaDetalleTraspaso()
     {
-        $traspaso = new DTraspaso();
-        $lista = $traspaso->listadoTraspasos();
+        $detalle_traspaso = new DDetalleTraspaso();
+        $lista = $detalle_traspaso->listaDetalleTraspaso();
         echo $lista;
     }
 	

@@ -91,8 +91,7 @@ if (!isset($_SESSION['id_usuario'])) {
                 <div class="widget-heading clearfix">
                     <h3 class="widget-title pull-left">Listado de Traspaso</h3>
                     <div class="pull-right">
-                        <a href="crear_traspaso.php" class="btn btn-primary"><i class="ti-plus"></i> Crear órden de
-                            traspaso</a>
+                        <a href="crear_traspaso.php" class="btn btn-primary"><i class="ti-plus"></i> Crear Traspaso</a>
                     </div>
                 </div>
                 <div class="widget-body">

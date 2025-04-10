@@ -18,7 +18,7 @@ $(document).ready(function () {
         "info": false,
         "searching": true,
         "ajax": {
-            "url": "../../negocio/NTraspaso.php?funcion=listadoTraspasos",
+            "url": "../../negocio/NTraspaso.php?funcion=listaDetalleTraspaso",
             "error": function (xhr, error, thrown) {
                 console.log("❌ Error al cargar los datos del DataTable");
                 console.log("xhr:", xhr);
@@ -160,6 +160,7 @@ $(document).ready(function () {
                     if (cantidad_traspaso <= cantidad_disponible) {
                         $('#dt_detalle').dataTable().fnAddData([id_detalle, id_transporte_origen, id_transporte_destino, id_usuario_transporte, id_usuario_destino, producto, usuario,cantidad_disponible, transporte_destino, cantidad_traspaso, id_producto]);
                         clearInput();
+
                     } else {
                         alert("La Cantidad a transportar debe ser menor o igual a la cantidad disponible");
                         $('#cantidad_traspaso').val(1);
@@ -523,12 +524,17 @@ $(document).ready(function () {
         $('#producto').val('');
         
         $('#cantidad_disponible').val('');
-        $('#cantidad_traspaso').val('');
+        //  A cada accion colocamos uno de valor
+        $('#cantidad_traspaso').val('1');
         
         $('#id_transporte_destino').val('');
         $('#transporte_destino').val('');
         $('#id_usuario_destino').val('');
         $('#id_detalle').val('');
+
+        // Restablecemos la busqueda de las otras tablas
+        $('#traspaso_destino').DataTable().ajax.reload();
+        $('#traspaso_origen').DataTable().ajax.reload();
     }
 
     // function Existe_Producto(Id_Producto){

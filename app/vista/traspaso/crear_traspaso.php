@@ -83,9 +83,9 @@ $usuario = new DUsuario();
             <div class="pull-left">
                 <h4 class="mt-0 mb-5">Traspaso</h4>
                 <ol class="breadcrumb mb-0">
-                    <li><a href="#">Trasporte</a></li>
-                    <li><a href="index_traspaso.php">Listado de traspasos</a></li>
-                    <li class="active">Crear traspasos</li>
+                    <li><a href="#">Traspaso</a></li>
+                    <li><a href="index_traspaso.php">Listado de Traspasos</a></li>
+                    <li class="active">Crear Traspasos</li>
                 </ol>
             </div>
         </div>
@@ -266,7 +266,7 @@ $usuario = new DUsuario();
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">Cancelar
                         </button>
-                        <button type="submit" class="btn btn-raised btn-black seleccionar">Seleccionar Trasporte
+                        <button type="submit" class="btn btn-raised btn-black seleccionar">Seleccionar Transporte
                         </button>
                     </div>
                 </div>
@@ -299,7 +299,7 @@ $usuario = new DUsuario();
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">Cancelar
                         </button>
-                        <button type="submit" class="btn btn-raised btn-black seleccionar-destino">Seleccionar Trasporte
+                        <button type="submit" class="btn btn-raised btn-black seleccionar-destino">Seleccionar Transporte
                         </button>
                     </div>
                 </div>
@@ -313,7 +313,7 @@ $usuario = new DUsuario();
                     <div class="modal-header">
                         <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
                                     aria-hidden="true">×</span></button>
-                        <h4 class="modal-title">Listado de productos</h4>
+                        <h4 class="modal-title">Listado de Productos</h4>
                     </div>
                     <div class="modal-body">
                         <table id="producto-transporte" style="width: 100%"
@@ -338,7 +338,7 @@ $usuario = new DUsuario();
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">Cancelar
                         </button>
-                        <button type="submit" class="btn btn-raised btn-black seleccionar-producto">Seleccionar productos
+                        <button type="submit" class="btn btn-raised btn-black seleccionar-producto">Seleccionar Productos
                         </button>
                     </div>
                 </div>
