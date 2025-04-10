@@ -56,7 +56,7 @@ $(document).ready(function () {
             "targets": [1],
             "visible": false
         }],
-        "order": [[1, "asc"]]
+        "order": [[1, "desc"]]
     }); 
 
     $("#traspaso_destino").DataTable({
@@ -448,8 +448,17 @@ $(document).ready(function () {
         if ($('#form-trasnporte').valid()) {
             //alert('insertar transporte');
             var fecha = $('#fecha').val();
-            var detalle = JSON.stringify(getDetalle());
-            console.log(detalle);
+
+            var detalleArray = getDetalle(); // sin stringify aún
+
+            if (detalleArray.length === 0) {
+                alert("Por favor, agrega al menos un producto al detalle antes de guardar.");
+                return; // Detiene el envío
+            }
+
+            var detalle = JSON.stringify(detalleArray);
+ 
+
             //alert('transportar');
             $.ajax({
                 type: "POST",

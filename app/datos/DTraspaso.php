@@ -110,7 +110,6 @@ class DTraspaso
 					INNER JOIN Producto ON Orden_Produccion.Id_Producto=Producto.Id
                     WHERE Transportar.Estado = 0
                     AND Detalle_Transporte.Disponible > 0
-                    AND YEAR(Transportar.Fecha) = YEAR(CURDATE())
                     GROUP BY Usuario.Id";
 
 			$cone =  new Database();
@@ -141,9 +140,14 @@ class DTraspaso
 
 			$cone =  new Database();
 			$tabla = $cone->get_json_rows($sql);
-			return '{"data":[' . $tabla . ']}';
+            // Si no hay datos, devuelve data vacía
+            if (empty($tabla)) {
+                return '{"data":[]}';
+            } else {
+                return '{"data":[' . $tabla . ']}';
+            }
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            return '{"data":[]}';
         }
     }
 
@@ -162,7 +166,6 @@ class DTraspaso
 					INNER JOIN Producto ON Orden_Produccion.Id_Producto=Producto.Id
                     WHERE Transportar.Estado = 0
                     AND Detalle_Transporte.Disponible > 0
-                    AND YEAR(Transportar.Fecha) = YEAR(CURDATE())
                     AND Usuario.Id != $id_usuario";
 
 			$cone =  new Database();
