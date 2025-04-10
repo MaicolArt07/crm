@@ -125,9 +125,9 @@ if (!isset($_SESSION['id_usuario'])) {
                         <thead>
                         <tr>
                             <th class="text-center">Id</th>
-                            <th class="text-center">Transporte Origen</th>
-                            <th class="text-center">Transporte Destino</th>
-                            <th class="text-center">Cantidad Traspaso</th>
+                            <th class="text-center">Transporte</th>
+                            <th class="text-center">Producto</th>
+                            <th class="text-center">Cantidad</th>
                         </tr>
                         </thead>
                         <tbody>

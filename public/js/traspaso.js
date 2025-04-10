@@ -29,8 +29,8 @@ $(document).ready(function () {
         },
         "columns": [
             { "data": "Id" },
-            { "data": "Transporte_Origen" },
             { "data": "Transporte_Destino" },
+            { "data": "Producto" },
             { "data": "Cantidad_Traspaso" }
         ],
         "language": {

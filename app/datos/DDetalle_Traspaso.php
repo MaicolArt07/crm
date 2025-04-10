@@ -98,30 +98,42 @@ class DDetalleTraspaso
     public function listaDetalleTraspaso()
     {
             try {
-                $sql = "SELECT  
+                // $sql = "SELECT  
+                //             Detalle_Traspaso.Id,
+                //             Usuario_Origen.Nombre AS Transporte_Origen,
+                //             Usuario_Destino.Nombre AS Transporte_Destino,
+                //             Detalle_Traspaso.Cantidad AS Cantidad_Traspaso
+                //         FROM Detalle_Traspaso
+
+                //         -- Origen
+                //         INNER JOIN Detalle_Transporte AS DT_Origen 
+                //             ON Detalle_Traspaso.Id_Detalle_Transporte_Origen = DT_Origen.Id
+                //         INNER JOIN Transportar AS T_Origen 
+                //             ON DT_Origen.Id_Transportar = T_Origen.Id
+                //         INNER JOIN Usuario AS Usuario_Origen 
+                //             ON T_Origen.Id_Usuario = Usuario_Origen.Id
+
+                //         -- Destino
+                //         INNER JOIN Detalle_Transporte AS DT_Destino 
+                //             ON Detalle_Traspaso.Id_Detalle_Transporte_Destino = DT_Destino.Id
+                //         INNER JOIN Transportar AS T_Destino 
+                //             ON DT_Destino.Id_Transportar = T_Destino.Id
+                //         INNER JOIN Usuario AS Usuario_Destino 
+                //             ON T_Destino.Id_Usuario = Usuario_Destino.Id
+
+                //         ORDER BY Detalle_Traspaso.Id ASC";
+
+                $sql = 'SELECT  
                             Detalle_Traspaso.Id,
-                            Usuario_Origen.Nombre AS Transporte_Origen,
-                            Usuario_Destino.Nombre AS Transporte_Destino,
+                            Usuario.Nombre AS Transporte_Destino,
+                            Producto.Nombre AS Producto,
                             Detalle_Traspaso.Cantidad AS Cantidad_Traspaso
                         FROM Detalle_Traspaso
-
-                        -- Origen
-                        INNER JOIN Detalle_Transporte AS DT_Origen 
-                            ON Detalle_Traspaso.Id_Detalle_Transporte_Origen = DT_Origen.Id
-                        INNER JOIN Transportar AS T_Origen 
-                            ON DT_Origen.Id_Transportar = T_Origen.Id
-                        INNER JOIN Usuario AS Usuario_Origen 
-                            ON T_Origen.Id_Usuario = Usuario_Origen.Id
-
-                        -- Destino
-                        INNER JOIN Detalle_Transporte AS DT_Destino 
-                            ON Detalle_Traspaso.Id_Detalle_Transporte_Destino = DT_Destino.Id
-                        INNER JOIN Transportar AS T_Destino 
-                            ON DT_Destino.Id_Transportar = T_Destino.Id
-                        INNER JOIN Usuario AS Usuario_Destino 
-                            ON T_Destino.Id_Usuario = Usuario_Destino.Id
-
-                        ORDER BY Detalle_Traspaso.Id ASC";
+                        INNER JOIN Detalle_Transporte ON Detalle_Traspaso.Id_Detalle_Transporte_Destino = Detalle_Transporte.Id
+                        INNER JOIN Transportar ON Detalle_Transporte.Id_Transportar = Transportar.Id
+                        INNER JOIN Usuario ON Transportar.Id_Usuario = Usuario.Id
+                        INNER JOIN Producto ON Detalle_Transporte.Id_Producto=Producto.Id
+                        ORDER BY Detalle_Traspaso.Id ASC';
 
                 $cone =  new Database();
                 $tabla = $cone->get_json_rows($sql);
