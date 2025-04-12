@@ -29,7 +29,9 @@ $(document).ready(function () {
         },
         "columns": [
             { "data": "Id" },
+            { "data": "Fecha_Registro" },
             { "data": "Transporte_Destino" },
+            { "data": "Transporte_Origen" },
             { "data": "Producto" },
             { "data": "Cantidad_Traspaso" }
         ],

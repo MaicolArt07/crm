@@ -123,17 +123,36 @@ class DDetalleTraspaso
 
                 //         ORDER BY Detalle_Traspaso.Id ASC";
 
-                $sql = 'SELECT  
+                // $sql = 'SELECT  
+                //             Detalle_Traspaso.Id,
+                //             Usuario.Nombre AS Transporte_Destino,
+                //             Producto.Nombre AS Producto,
+                //             Detalle_Traspaso.Cantidad AS Cantidad_Traspaso
+                //         FROM Detalle_Traspaso
+                //         INNER JOIN Detalle_Transporte ON Detalle_Traspaso.Id_Detalle_Transporte_Destino = Detalle_Transporte.Id
+                //         INNER JOIN Transportar ON Detalle_Transporte.Id_Transportar = Transportar.Id
+                //         INNER JOIN Usuario ON Transportar.Id_Usuario = Usuario.Id
+                //         INNER JOIN Producto ON Detalle_Transporte.Id_Producto=Producto.Id
+                //         ORDER BY Detalle_Traspaso.Id ASC';
+
+                $sql = "SELECT  
                             Detalle_Traspaso.Id,
+                            Traspaso.Fecha,
+                            Traspaso.Fecha_Registro,
                             Usuario.Nombre AS Transporte_Destino,
+                            Usuario_Origen.Nombre AS Transporte_Origen,
                             Producto.Nombre AS Producto,
                             Detalle_Traspaso.Cantidad AS Cantidad_Traspaso
                         FROM Detalle_Traspaso
+                        INNER JOIN Traspaso ON Detalle_Traspaso.Id_Traspaso=Traspaso.Id
+						INNER JOIN Transportar AS Transportar_Origen ON Traspaso.Id_Transporte_Origen=Transportar_Origen.Id
+						INNER JOIN Usuario AS Usuario_Origen ON Transportar_Origen.Id_Usuario=Usuario_Origen.Id 
+                        
                         INNER JOIN Detalle_Transporte ON Detalle_Traspaso.Id_Detalle_Transporte_Destino = Detalle_Transporte.Id
                         INNER JOIN Transportar ON Detalle_Transporte.Id_Transportar = Transportar.Id
                         INNER JOIN Usuario ON Transportar.Id_Usuario = Usuario.Id
                         INNER JOIN Producto ON Detalle_Transporte.Id_Producto=Producto.Id
-                        ORDER BY Detalle_Traspaso.Id ASC';
+                        ORDER BY Detalle_Traspaso.Id ASC";
 
                 $cone =  new Database();
                 $tabla = $cone->get_json_rows($sql);
