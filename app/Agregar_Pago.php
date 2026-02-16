@@ -1,5 +1,6 @@
 
 <?php
+  
    require('datos/gestor.php');
     //$JSON_venta = $_REQUEST["JSON_venta"];
 	//$obj = json_decode($JSON_venta, true);

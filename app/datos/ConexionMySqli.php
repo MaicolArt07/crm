@@ -11,11 +11,6 @@
 class Database{
 	
     private $_connection;
-    /*private $_host = "localhost";
-    private $_user = "user_bd_breadking";
-    private $_pass = "79B8@tfb";
-    private $_db   = "bd_breadking";*/
-    //private $_host = "srv936.hstgr.io";
     private $_host = "localhost";
     private $_user = "root";
     private $_pass = "";

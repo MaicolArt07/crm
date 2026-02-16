@@ -1,7 +1,8 @@
 $(document).ready(function () {
 	var id_transporte = $('#id_transporte').val();
 	//alert(id_transporte);
-	if(id_transporte!=null){
+	if(id_transporte!=null)
+    {
 		$('#dt_detalle').DataTable({
 		"paging": false,
         "ordering": false,
@@ -35,6 +36,74 @@ $(document).ready(function () {
         ]
 		});
 	}
+
+       // OBTENEMOS TODOS LOS PRODUCTOS DETALLE DE ESE TRANSPORTE QUE ESTA TODAVIA ABIERTO PARA COLOCARLO EN TABLA DEL TRANSPORTE
+
+       $('#transportes_abiertos').on('change', function () {
+        var id_transporte = $(this).val();
+        if (id_transporte !== '') {
+            var table = $('#dt_detalle').DataTable({
+                "destroy": true,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                "searching": false,
+                "ajax": {
+                    "url": "../../negocio/NDetalle_Transporte.php?funcion=detalle",
+                    "type": "GET",
+                    "data": { id_transporte: id_transporte },
+                    "dataSrc": function (json) {
+                        // Filtrar los datos para asegurarse de que la cantidad disponible sea mayor a 0
+                        var filteredData = json.data.filter(function(item) {
+                            return item.Saldo > 0;  // Validación de que el saldo (cantidad disponible) es mayor a 0
+                        });
+                        // Convertir objetos a arrays y devolver los datos filtrados
+                        return filteredData.map(function (item) {
+                            return [0, item.Id_Producto, item.Nombre, item.Saldo, item.Saldo];
+                        });
+                    }
+                },
+                "columns": [
+                    { title: "", "visible": false },   // Primera columna oculta
+                    { title: "Id" },                   // id_producto
+                    { title: "Producto" },             // Nombre
+                    { title: "Cantidad Disponible" },  // Saldo
+                    { title: "Cantidad" }              // Inicio
+                ],
+                "language": {
+                    "url": "../../../public/plugins/datatables.net/Spanish.json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": 0,
+                        "orderable": false,
+                        "visible": false  // Hacer la primera columna invisible
+                    },
+                    {
+                        "targets": [3],
+                        "className": "text-right" // Alinear "Saldo" a la derecha
+                    }
+                ],
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    api.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                        var row = this.node();
+                        var data = this.data();
+    
+                        // Aquí puedes añadir una clase para deshabilitar toda la fila
+                        // Por ejemplo, una clase llamada 'disabled-row'
+                        $(row).addClass('disabled-row');
+    
+                        data[0] = rowIdx + 1; // Columna Aux = número de fila
+                        this.data(data);
+                    });
+                }
+            });
+        }
+    });
+    
+    
+
 	
 	$("#dt_transportes").DataTable({
         "ajax": "../../negocio/NTransportar.php?funcion=listado",
@@ -88,6 +157,9 @@ $(document).ready(function () {
         }
     });
 	
+
+ 
+
 	/*$("#dt_transportes").DataTable({
         "ajax": "../../negocio/NTransportar.php?funcion=listado",
         "columns": [
@@ -198,8 +270,6 @@ $(document).ready(function () {
 		}else{
 			alert("el producto ya está en la orden de transporte, si quiere adicionar mas cantidad modifique el detalle");
 		}
-	
-
     });
 	
 	//*Listado de compras*//
@@ -219,7 +289,7 @@ $(document).ready(function () {
         $('#id_compra').val(data.Id);
     });
 	
-	$('#fecha').setDateTime();
+	// $('#fecha').setDateTime();
 
 	//**Crear compra: modificar y eliminar producto de la tabla**//
 
@@ -241,11 +311,11 @@ $(document).ready(function () {
             $('.eliminar-producto').show();
             $.each($("#dt_detalle tr.selected"), function () {
                 row_selected = table_detalle.row(this).data();
-                var id_producto = row_selected[0];
-				var producto = row_selected[1];
-                var cantidad_disponible = row_selected[2];
-                var cantidad_transporte = row_selected[3];
-				
+                var id_producto = row_selected[1];
+				var producto = row_selected[2];
+                var cantidad_disponible = row_selected[3];
+                var cantidad_transporte = row_selected[4];
+				console.log(row_selected);
 				$('#id_producto').val(id_producto);
 				$('#producto').val(producto);
 				$('#cantidad_disponible').val(cantidad_disponible);
@@ -334,6 +404,25 @@ $(document).ready(function () {
 			var id_usuario = $('#usuario :selected').val();
 			var fecha = $('#fecha').val();
 			var detalle = JSON.stringify(getDetalle());
+            var id_transporte = $('#transportes_abiertos').val();
+
+            if (id_transporte && id_transporte !== '') 
+            {
+                // Hacemos la petición para finalizar el transporte
+                $.ajax({
+                    type: "POST",
+                    url: "../../negocio/NTransportar.php?funcion=finalizar",
+                    data: { id_transporte: id_transporte },
+                    success: function (data2) {
+                        top.alert(data2); // Mostrar alerta final
+                        location.href = 'index_transportes.php';
+                    },
+                    error: function () {
+                        alert("Error al finalizar el transporte.");
+                    }
+                });
+            }
+            
 			//alert('transportar');
             $.ajax({
                 type: "POST",
@@ -344,11 +433,11 @@ $(document).ready(function () {
 					detalle_transporte: detalle
                 },
                 success: function (data) {
+                    console.log(data);
                     alert(data);
 					location.href = 'index_transportes.php';
-                    
+                    // Si existe algo dentro de el id transporte abiertos finalizamos ese transporte
                 }
-
             });
         }
     });

@@ -101,7 +101,7 @@ $usuario = new DUsuario();
                                     <div data-format="dd/mm/yyyy" class="input-group">
                                         <input id="fecha" type="text" name="fecha"
                                                data-rule-required="true"
-											   value="<?php echo date("d/m/Y"); ?>"
+											   value="<?php echo date("Y-m-d"); ?>"
                                                class="form-control" readonly><span class="input-group-addon"><i
                                                     class="ti-calendar"></i></span>
                                     </div>
@@ -110,10 +110,10 @@ $usuario = new DUsuario();
 							
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="usuario">Usuario</label>
+                                    <label for="usuario">Transportes</label>
                                     <select id="usuario" name="usuario" data-rule-required="true"
                                             class="form-control">
-                                        <option value="">Seleccione un usuario</option>
+                                        <option value="">Seleccione un transporte</option>
                                         <?php
                                         $lista = $usuario->getUsuarios_Transportar();
                                         while ($row = $lista->fetch_array()):; ?>
@@ -123,6 +123,20 @@ $usuario = new DUsuario();
                                 </div>
                             </div>
 
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="transportes_abiertos">Transportes Abiertos</label>
+                                    <select id="transportes_abiertos" name="transportes_abiertos"
+                                            class="form-control">
+                                        <option value="">Seleccione un transporte</option>
+                                        <?php
+                                        $lista = $usuario->getUsuarios_Transportar_abiertos();
+                                        while ($row = $lista->fetch_array()):; ?>
+                                            <option value="<?php echo $row[0]; ?>"><?php echo $row[1]; ?></option>
+                                        <?php endwhile; ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 						
 						<div class="row">

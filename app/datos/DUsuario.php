@@ -11,6 +11,7 @@ class DUsuario
     private $Nombre;
     private $Login;
     private $Clave;
+    private $Id_Sucursal;
     private $Tipo;
     private $Estado;
 
@@ -29,6 +30,22 @@ class DUsuario
     public function setId($Id)
     {
         $this->Id = $Id;
+    }
+
+        /**
+     * @return mixed
+     */
+    public function getIdSucursal()
+    {
+        return $this->Id_Sucursal;
+    }
+
+    /**
+     * @param mixed $id_usuario
+     */
+    public function setIdSucursal($Id_Sucursal)
+    {
+        $this->Id_Sucursal = $Id_Sucursal;
     }
 
     /**
@@ -148,8 +165,24 @@ class DUsuario
     function getUsuarios_Transportar()
     {
         try {
-            $sql = "select * from Usuario where Usuario.Id not in (select Id_Usuario from Transportar where Estado=3 or Estado=4)
+            $sql = "SELECT * from Usuario where Usuario.Id not in (select Id_Usuario from Transportar where Estado=3 or Estado=4)
 			and Tipo like '%Vendedor%'";
+			$cone =  new Database();
+			$statement = $cone->ejecutar_idu($sql);
+            if ($statement) {
+                return $statement;
+            }
+        } catch (Exception $exception) {
+            echo $exception->getTraceAsString();
+        }
+    }
+
+    function getUsuarios_Transportar_abiertos()
+    {
+        try {
+            $sql = "SELECT Transportar.Id, Usuario.Nombre, Usuario.Id FROM Usuario
+                    INNER JOIN Transportar ON Usuario.Id=Transportar.Id_Usuario
+                    WHERE Transportar.Estado = 0";
 			$cone =  new Database();
 			$statement = $cone->ejecutar_idu($sql);
             if ($statement) {
@@ -180,7 +213,8 @@ class DUsuario
 	public function insertarUsuario()
     {
         try {
-            $sql = "INSERT INTO Usuario(Nombre, Login, Clave, Tipo) VALUES ('$this->Nombre','$this->Login','$this->Clave','$this->Tipo')";
+             $sql = "INSERT INTO Usuario(Nombre, Login, Clave, Tipo, Id_Sucursal) VALUES ('$this->Nombre','$this->Login','$this->Clave','$this->Tipo','$this->Id_Sucursal')";
+            
             $cone =  new Database();
 			$statement = $cone->ejecutar_idu($sql);
             if (!$statement)
@@ -196,7 +230,7 @@ class DUsuario
     public function modificarUsuario()
     {
         try {
-            $sql = "UPDATE Usuario SET Nombre='$this->Nombre', Login='$this->Login',Clave='$this->Clave',Tipo='$this->Tipo' WHERE Id=$this->Id";
+            $sql = "UPDATE Usuario SET Nombre='$this->Nombre', Login='$this->Login',Clave='$this->Clave',Tipo='$this->Tipo', Id_Sucursal='$this->Id_Sucursal' WHERE Id=$this->Id";
             $cone =  new Database();
 			$statement = $cone->ejecutar_idu($sql);
             if (!$statement)

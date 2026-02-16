@@ -100,7 +100,7 @@ class DTransportar
 				return true;
             }
 		} catch (Exception $exc) {
-            echo ' error al leer id insertar transporte '+$exc->getTraceAsString();
+            echo ' error al leer id insertar transporte '.$exc->getTraceAsString();
         }
 		return true;
     }
@@ -155,6 +155,26 @@ class DTransportar
             $sql = "select Transportar.Id,DATE_FORMAT(Transportar.Fecha,\"%d/%m/%Y\") as Fecha,Usuario.Nombre as Usuario,Transportar.Estado 
 			from Transportar
 			inner join Usuario on Transportar.Id_Usuario=Usuario.id  order by Transportar.Fecha desc";
+            /*$conexion = Conexion::getInstance();
+            $statement = $conexion->ejecutar($sql);
+            while ($data = mysql_fetch_assoc($statement)) {
+                $lista_compra["data"][] = $data;
+            }
+            echo json_encode($lista_compra);*/
+			$cone =  new Database();
+			$tabla = $cone->get_json_rows($sql);
+			return '{"data":[' . $tabla . ']}';
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
+    public function listadoTransportePendiente()
+    {
+        try {
+            $sql = "select Transportar.Id,DATE_FORMAT(Transportar.Fecha,\"%d/%m/%Y\") as Fecha,Usuario.Nombre as Usuario,Transportar.Estado 
+			from Transportar
+			inner join Usuario on Transportar.Id_Usuario=Usuario.id where Estado=0  order by Transportar.Fecha desc";
             /*$conexion = Conexion::getInstance();
             $statement = $conexion->ejecutar($sql);
             while ($data = mysql_fetch_assoc($statement)) {

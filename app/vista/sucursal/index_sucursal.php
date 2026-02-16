@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['id_usuario'])) {
-    header("Location: ../login.php");
+    header("Location: login.php");
 }
 ?>
 <!DOCTYPE html>
@@ -9,7 +9,7 @@ if (!isset($_SESSION['id_usuario'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, iloginial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Alternativas en otros formatos -->
     <link rel="icon" href="../../../public/images/icon.png" type="image/png">
     <title>Bread King</title>
@@ -48,7 +48,7 @@ if (!isset($_SESSION['id_usuario'])) {
 <body data-sidebar-color="sidebar-light" class="sidebar-light">
 <!-- Header start-->
 <header>
-    <a href="index_usarios.php" class="brand pull-left">
+    <a href="index_tienda.php" class="brand pull-left">
         <h2>BREAD KING</h2></a><a href="javascript:;" role="button"
                                   class="hamburger-menu pull-left visible-xs"><span></span></a>
 
@@ -76,124 +76,23 @@ if (!isset($_SESSION['id_usuario'])) {
     <div class="page-container">
         <div class="page-header clearfix">
             <div class="pull-left">
-                <h4 class="mt-0 mb-5">Usarios</h4>
+                <h4 class="mt-0 mb-5">Sucursales</h4>
                 <ol class="breadcrumb mb-0">
-                    <li><a href="#">Compra</a></li>
-                    <li><a href="#">Usarios</a></li>
-                    <li class="active">Listado de Usarios</li>
+                    <li><a href="#">Sucursal</a></li>
+                    <li><a href="#">Sucursales</a></li>
+                    <li class="active">Listado de Sucursal</li>
                 </ol>
             </div>
         </div>
         <div class="page-content container-fluid">
             <div class="widget">
                 <div class="widget-heading clearfix">
-                    <h3 class="widget-title pull-left">Listado de Usarios</h3>
+                    <h3 class="widget-title pull-left">Listado de Sucursales</h3>
                     <div class="pull-right">
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target=".bs-modal-form-insertar"><i class="ti-plus"></i> Crear Usarios
-                        </button>
+                        <a href="crear_sucursal.php" class="btn btn-primary"><i class="ti-plus"></i> Crear Sucursal</a>
                     </div>
                 </div>
                 <div class="widget-body">
-
-
-                    <div tabindex="-1" role="dialog" class="modal fade bs-modal-form-insertar text-left">
-                        <div role="document" class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
-                                                aria-hidden="true">×</span></button>
-                                    <h4 class="modal-title">Crear Usarios</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="form-group">
-                                            <label for="nombre">Nombre</label>
-                                            <input id="nombre" type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="login">Login</label>
-                                            <input id="login" type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="clave">Clave</label>
-                                            <input id="clave" type="password" class="form-control">
-                                        </div>
-										<div class="form-group">
-                                            <label for="tipo">Tipo</label>
-                                            <select id="tipo" name="tipo" class="form-control">
-												<option value="Administrador">Administrador</option>
-												<option value="Vendedor">Vendedor</option>
-												<option value="Admin-Vendedor">Admin-Vendedor</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="sucursal">Sucursal</label>
-                                            <select id="sucursal" name="sucursal" class="form-control">
-												<option value="Administrador">Administrador</option>
-												<option value="Vendedor">Vendedor</option>
-												<option value="Admin-Vendedor">Admin-Vendedor</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">
-                                        Cancelar
-                                    </button>
-                                    <button type="button" class="btn btn-raised btn-black insertar">Guardar datos
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div tabindex="-1" role="dialog"
-                         class="modal fade bs-modal-form-modificar text-left">
-                        <div role="document" class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
-                                                aria-hidden="true">×</span></button>
-                                    <h4 class="modal-title">Modificar Usarios</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form method="post">
-										<label for="id">Id</label>
-                                        <input id="id_usuario" readonly class="form-control">
-                                        <div class="form-group">
-                                            <label for="nombre_modificar">Nombre</label>
-                                            <input id="nombre_modificar" type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="login_modificar">Login</label>
-                                            <input id="login_modificar" type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="clave_modificar">Clave</label>
-                                            <input id="clave_modificar" type="password" class="form-control">
-                                        </div>
-										<div class="form-group">
-                                            <label for="tipo_modificar">Tipo</label>
-                                            <select id="tipo_modificar" name="tipo_modificar" class="form-control">
-												<option value="Administrador">Administrador</option>
-												<option value="Vendedor">Vendedor</option>
-												<option value="Admin-Vendedor">Admin-Vendedor</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">
-                                        Cancelar
-                                    </button>
-                                    <button type="button" class="btn btn-raised btn-black modificar">Modificar datos
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
 
                     <div tabindex="-1" role="dialog"
                          class="modal fade bs-modal-form-deshabilitar text-left">
@@ -202,20 +101,17 @@ if (!isset($_SESSION['id_usuario'])) {
                                 <div class="modal-header bg-black">
                                     <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
                                                 aria-hidden="true">×</span></button>
-                                    <h4 class="modal-title">Deshabilitar Usarios</h4>
+                                    <h4 class="modal-title">Deshabilitar Sucursal</h4>
                                 </div>
                                 <div class="modal-body">
-									<label for="id">Id</label>
-                                    <input id="id_usuario_deshabilitar" readonly class="form-control">
-									<label for="nombre">Nombre</label>
-                                    <input id="nombre_usuario_deshabilitar" readonly class="form-control">
+                                    <input id="id_sucursal_deshabilitar" class="form-control">
+                                    <p>Deshabilitar la sucursal seleccionada</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">
                                         Cancelar
                                     </button>
-                                    <button type="button" class="btn btn-raised btn-black deshabilitar">Ok
-                                    </button>
+                                    <button type="button" class="btn btn-raised btn-black" id="btn-confirmar-deshabilitar">Ok</button>
                                 </div>
                             </div>
                         </div>
@@ -228,34 +124,35 @@ if (!isset($_SESSION['id_usuario'])) {
                                 <div class="modal-header bg-black">
                                     <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
                                                 aria-hidden="true">×</span></button>
-                                    <h4 class="modal-title">Habilitar Usarios</h4>
+                                    <h4 class="modal-title">Habilitar Sucursal</h4>
                                 </div>
                                 <div class="modal-body">
-									<label for="id">Id</label>
-                                    <input id="id_usuario_habilitar" readonly class="form-control">
-									<label for="nombre">Nombre</label>
-                                    <input id="nombre_usuario_habilitar" readonly class="form-control">
+                                    <input id="id_sucursal_habilitar" type="text" class="form-control">
+                                    <p>Habilitar la Sucursal seleccionada</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" data-dismiss="modal" class="btn btn-raised btn-default">
                                         Cancelar
                                     </button>
-                                    <button type="button" class="btn btn-raised btn-black habilitar">Ok</button>
+                                    <button type="button" class="btn btn-raised btn-black" id="btn-confirmar-habilitar">Ok</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <table id="dt_usuarios" cellspacing="0" width="100%"
+                    <table id="dt_sucursales" cellspacing="0" width="100%"
                            class="table table-striped table-bordered table-condensed">
                         <thead>
                         <tr>
+                        <tr>
                             <th>Id</th>
                             <th>Nombre</th>
-                            <th>Login</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
+                            <th>Dirección</th>
+                            <th>Celular</th>
+                            <th>Coordenadas</th>
+                            <th>Estado</th> <!-- Muestra habilitado/deshabilitado -->
                             <th class="text-center">Acciones</th>
+                        </tr>
                         </tr>
                         </thead>
                         <tbody>
@@ -301,11 +198,11 @@ if (!isset($_SESSION['id_usuario'])) {
         src="../../../public/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script type="text/javascript"
         src="../../../public/plugins/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-
+<script type="text/javascript" src="../../../public/plugins/datatables.net/js/date-eu.js"></script>
 <script type="text/javascript" src="../../../public/build/js/app.js"></script>
 
 <script type="text/javascript" src="../../../public/js/helpers.js"></script>
-<script type="text/javascript" src="../../../public/js/usuario.js"></script>
+<script type="text/javascript" src="../../../public/js/sucursal.js"></script>
 
 </body>
 </html>

@@ -292,10 +292,10 @@ class DDetalleTransporte
                 {
                     $id_orden_transporte = $result['Id_Orden_Produccion'];
                     $cantidad_disponible = $result['Cantidad_Disponible'];
-                    
+
                     $cantidad_total = $cantidad_disponible + $this->Cantidad_Retirar;
                     // Actualizamos la cantidad disponible de la orden
-                    $sql_actualizar_orden = "UPDATE Orden_Produccion SET Cantidad_Disponible = '$cantidad_total' WHERE Orden_Produccion.Id = $id_orden_transporte";
+                    $sql_actualizar_orden = "UPDATE Orden_Produccion SET Cantidad_Disponible = $cantidad_total WHERE Orden_Produccion.Id = $id_orden_transporte";
                     $result_update = $cone->ejecutar_idu($sql_actualizar_orden);
 
                     if($result_update)

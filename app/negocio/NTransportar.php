@@ -21,6 +21,10 @@ if (isset($_REQUEST['funcion'])) {
             $transportar->listadoTransportes();
 			//echo "hola";
             break;
+        case "listado_pendiente":
+            $transportar->listadoTransportes();
+            //echo "hola";
+            break;
 		case "finalizar":
 			$id_transporte = $_POST['id_transporte'];
             $transportar->finalizar($id_transporte);
@@ -34,8 +38,8 @@ class NTransportar
     {
         $transportar = new DTransportar();
 		$transportar->setIdUsuario($id_usuario);
-		$fecha_formato = $transportar->formatDate($fecha);
-        $transportar->setFecha($fecha_formato);
+		// $fecha_formato = $transportar->formatDate($fecha);
+        $transportar->setFecha($fecha);
         $result = $transportar->insertarTransporte();
 		//echo 'guardo transporte';
 		if ($result) {
@@ -94,6 +98,13 @@ class NTransportar
     {
         $transportar = new DTransportar();
         $lista = $transportar->listadoTransportes();
+        echo $lista;
+    }
+
+    public function listadoTransportesPendiente()
+    {
+        $transportar = new DTransportar();
+        $lista = $transportar->listadoTransportePendiente();
         echo $lista;
     }
 	
